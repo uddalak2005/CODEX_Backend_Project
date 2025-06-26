@@ -1,0 +1,19 @@
+{
+  "name": "codex_backend_peroject",
+  "version": "1.0.0",
+  "description": "This is a group project for club codex where we create various backend pipelines",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "dev": "nodemon src/index.js",
+    "server": "node src/index.js"
+  },
+  "author": "Codex",
+  "license": "MIT",
+  "dependencies": {
+    "dotenv": "^16.5.0",
+    "express": "^5.1.0",
+    "mongoose": "^8.16.0",
+    "nodemon": "^3.1.10"
+  }
+}
