@@ -1,6 +1,5 @@
 import mongoose from "mongoose";
 
-//Demo model can be edited later
 const EventSchema = mongoose.Schema(
   {
     title: {
