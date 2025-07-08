@@ -2,7 +2,7 @@ import express from "express";
 import "dotenv/config";
 import cors from "cors";
 import cookieParser from "cookie-parser";
-import eventRouter from "./routes/event.routes.js";
+import eventRouter from "./routes/event.route.js";
 import connectDB from "./config/db.js";
 const app = express();
 
@@ -22,7 +22,8 @@ const PORT = process.env.PORT;
 app.get("/", (req, res) => {
   res.send("Backend is on!");
 });
-app.listen(PORT, () => {
-  connectDB();
+
+app.listen(PORT, async () => {
+  await connectDB();
   console.log(`server is running successfully on http://localhost:${PORT}`);
 });

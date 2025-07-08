@@ -7,4 +7,4 @@ const asyncHandler=(requestHandler) => {
 
 // Saves you from using try catch every here and there, while doing database ,verification, fetching operations.
 
-export {asyncHandler};
+export { asyncHandler };
