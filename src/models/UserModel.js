@@ -1,9 +1,14 @@
-import mongoose from "mongoose";
+import mongoose,{Schema} from "mongoose";
+import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
 
-const UserSchema = mongoose.Schema({
+
+const UserSchema = Schema({
   fullName: {
     type: String,
     required: true,
+    trim:true,
+    lowercase:true
   },
   email: {
     type: String,
@@ -17,14 +22,15 @@ const UserSchema = mongoose.Schema({
     unique: true,
   },
   regNumber: {
-    type: String,
+    type: String,    //USING regNumber for INDEXING
     unique: true,
     required: true,
+    index:true
   },
   branch: {
     type: String,
     required: true,
-    required: true,
+  
   },
   year: {
     type: Number,
@@ -64,8 +70,8 @@ const UserSchema = mongoose.Schema({
     required: true,
   },
   aggreeTerms: {
-    type: boolean,
-    default: False,
+    type: Boolean,
+    default: false,
   },
   password: {
     type: String,
@@ -76,8 +82,57 @@ const UserSchema = mongoose.Schema({
     required: true,
     default: "user",
   },
-  createdAt: Date,
+  createdAt: {
+    type:Date,
+    default:Date.now()
+  }
 });
 
+
+// PASSWORD ENCRYPTION BEFORE SAVING
+UserSchema.pre("save",async function(next){
+  if(!this.isModified("password")) return next();
+  
+  this.password= await bcrypt.hash(this.password,10);
+  next();
+})
+
+//isPasswordCorrect function  - COMPARES PASSWORD AND RETURNS THE RESULT T/F
+UserSchema.methods.isPasswordCorrect=async function(password){
+  return await bcrypt.compare(password,this.password);
+}
+
+// Access token and Refresh token generating functions
+
+UserSchema.methods.generateAccessToken=function(){
+  return jwt.sign(
+    {
+      _id:this._id,
+      fullName:this.fullName,
+      email:this.email,
+      regNumber:this.regNumber,
+      role:this.role
+    },
+    process.env.ACCESS_SECRET_TOKEN,{
+      expiresIn:process.env.ACCESS_EXPIRY_TOKEN
+    }
+  )
+}
+
+UserSchema.methods.generateRefreshToken=function(){
+  return jwt.sign(
+    {
+      _id:this._id,
+      fullName:this.fullName,
+      email:this.email,
+      regNumber:this.regNumber,
+      role:this.role
+    },
+    process.env.REFRESH_SECRET_TOKEN,{
+      expiresIn: process.env.REFRESH_EXPIRY_TOKEN
+    }
+  )
+}
 const User = mongoose.model("User", UserSchema);
+
 export default User;

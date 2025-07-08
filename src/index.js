@@ -2,8 +2,8 @@ import express from "express";
 import "dotenv/config";
 import cors from "cors";
 import cookieParser from "cookie-parser";
-import eventRouter from "./routes/event.routes";
-import connectDB from "./config/db";
+import eventRouter from "./routes/event.routes.js";
+import connectDB from "./config/db.js";
 const app = express();
 
 //<Middlewares>

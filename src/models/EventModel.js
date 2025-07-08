@@ -1,6 +1,24 @@
-import mongoose from "mongoose";
+import mongoose,{Schema} from "mongoose";
 
-const EventSchema = mongoose.Schema(
+
+const ScheduleItemSchema = new Schema({
+  time: {
+    type: String,
+    required: true,
+  },
+  activity: {
+    type: String,
+    required: true,
+  },
+  day: {
+    type: String,
+    enum: ["Day 1", "Day 2"], // Optional, restricts allowed values
+    required: true,
+  },
+});
+
+
+const EventSchema = Schema(
   {
     title: {
       type: String,
@@ -66,20 +84,6 @@ const EventSchema = mongoose.Schema(
   },
   { timestamps: true }
 );
-const ScheduleItemSchema = new mongoose.Schema({
-  time: {
-    type: String,
-    required: true,
-  },
-  activity: {
-    type: String,
-    required: true,
-  },
-  day: {
-    type: String,
-    enum: ["Day 1", "Day 2"], // Optional, restricts allowed values
-    required: true,
-  },
-});
+
 const Event = mongoose.model("Event", EventSchema);
 export default Event;

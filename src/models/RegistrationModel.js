@@ -1,9 +1,12 @@
-import mongoose from "mongoose";
+import mongoose,{Schema} from "mongoose";
 
-const Registration = mongoose.Schema(
+const Registration = Schema(
   {
-    eventId: mongoose.Schema.Types.ObjectId,
-    userId: mongoose.Schema.Types.ObjectId,
+    eventId: Schema.Types.ObjectId,
+    ref:"User",
+    userId: Schema.Types.ObjectId,
+    ref:"User",
+
     registrationDate: {
       type: Date,
     },
@@ -11,6 +14,7 @@ const Registration = mongoose.Schema(
       //"registered"/"disqualified"/"cancelled"/"eliminated"
       type: String,
       required: true,
+      enum:["registered","disqualified","cancelled","eliminated"]
     },
     description: {
       type: String,
