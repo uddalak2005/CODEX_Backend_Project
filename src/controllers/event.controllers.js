@@ -1,7 +1,7 @@
 import Event from "../models/event.model.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 
-export const createEvent =asyncHandler( async (req, res) => {
+export const createEvent = asyncHandler(async (req, res) => {
   try {
     const {
       event_name,
@@ -39,5 +39,5 @@ export const createEvent =asyncHandler( async (req, res) => {
       eventEndDate,
     });
     res.status(201).json({ newEvent });
-  } catch (error) {}
+  } catch (error) { }
 });
