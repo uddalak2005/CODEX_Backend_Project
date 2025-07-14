@@ -7,10 +7,10 @@ import {
   editEventDetails,
   getAllEvents,
   getSingleEvent,
-  registerForEvent,
-  cancelRegistration,
-  getEventRegistrations,
-  uploadEventImage
+  // registerForEvent,
+  // cancelRegistration,
+  // getEventRegistrations,
+  // uploadEventImage
 } from "../controllers/event.controllers.js";
 
 const eventRouter = express.Router();
@@ -25,11 +25,11 @@ eventRouter.patch("/events/:id", isAuth, isAdmin, editEventDetails);
 eventRouter.delete("/events/:id", isAuth, isAdmin, deleteEvent);
 
 // RSVP system
-eventRouter.post("/events/:id/register", isAuth, registerForEvent);
-eventRouter.delete("/events/:id/register", isAuth, cancelRegistration);
-eventRouter.get("/events/:id/registrations", isAuth, isAdmin, getEventRegistrations);
+// eventRouter.post("/events/:id/register", isAuth, registerForEvent);
+// eventRouter.delete("/events/:id/register", isAuth, cancelRegistration);
+// eventRouter.get("/events/:id/registrations", isAuth, isAdmin, getEventRegistrations);
 
-// Optional: image upload
-eventRouter.post("/events/:id/image", isAuth, isAdmin, uploadEventImage);
+// Image upload later on will be added
+// eventRouter.post("/events/:id/image", isAuth, isAdmin, uploadEventImage);
 
 export default eventRouter;

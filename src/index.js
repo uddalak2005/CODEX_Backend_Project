@@ -15,6 +15,7 @@ const app = express();
 //<Middlewares>
 app.use(express.json());
 app.use(cookieParser());
+app.use(express.urlencoded({extended:true}));
 app.use(
   cors({
     origin: process.env.FRONTEND_URL,
@@ -28,7 +29,7 @@ app.use("/auth", userRouter);
 app.use(errorMiddleware);
 
 const PORT = process.env.PORT;
-app.get("/", (req, res) => {
+app.get("/", (_, res) => {
   res.send("Backend is on!");
 });
 
