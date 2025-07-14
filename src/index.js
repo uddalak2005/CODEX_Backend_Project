@@ -3,12 +3,12 @@ import "dotenv/config";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 
-import eventRouter from "./routes/event.route.js";
-import userController from "./routes/user.route.js";
+import eventRouter from "./routes/event.routes.js";
+import userController from "./routes/user.routes.js";
 import connectDB from "./config/db.js";
 
 import { errorMiddleware } from "./middleware/error.middleware.js";
-import userRouter from "./routes/user.route.js";
+import userRouter from "./routes/user.routes.js";
 
 const app = express();
 
