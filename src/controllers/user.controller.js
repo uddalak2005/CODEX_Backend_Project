@@ -1,7 +1,7 @@
-import User from "../../CODEX_Backend_Project/src/models/user.model.js";
+import User from "../models/user.model.js";
 import joi from "joi";
 import jwt from "jsonwebtoken";
-import { ApiError } from "../../CODEX_Backend_Project/src/utils/ApiError.js";
+import { ApiError } from "../utils/ApiError.js";
 import { generateTokens} from "../utils/tokenUtils.js";
 
 class UserController {
