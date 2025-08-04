@@ -1,16 +1,18 @@
+//Configuration imports
 import express from "express";
 import "dotenv/config";
+import connectDB from "./config/db.js";
 import cors from "cors";
 import cookieParser from "cookie-parser";
-import adminRouter from "./routes/admin.routes.js";
 
-import eventRouter from "./routes/event.routes.js";
-import userController from "./routes/user.routes.js";
-import connectDB from "./config/db.js";
-
+//Middleware imports
 import { errorMiddleware } from "./middleware/error.middleware.js";
+
+//Router imports
 import userRouter from "./routes/user.routes.js";
+import eventRouter from "./routes/event.routes.js";
 import registrationRouter from "./routes/registration.routes.js"
+import announcementRouter from "./routes/announcement.routes.js";
 
 const app = express();
 
@@ -24,10 +26,14 @@ app.use(
     credentials: true,
   })
 );
+
+//</Middlewares>
+
+//Routes
 app.use("/api/v1/events", eventRouter);
 app.use("/api/v1/users", userRouter);
 app.use("/api/v1/registers",registrationRouter);
-//</Middlewares>
+app.use("/api/v1/announcements",announcementRouter);
 
 app.use(errorMiddleware);
 
