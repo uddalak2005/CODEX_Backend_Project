@@ -1,4 +1,6 @@
 import Event from "../models/event.model.js";
+import User from "../models/user.model.js"
+import Registration from "../models/registration.model.js"
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
@@ -41,9 +43,9 @@ const createEvent = asyncHandler(async (req, res) => {
     return res.status(400).json({ message: "Incomplete details" });
   }
 
-  const doesEventAlreadyExist = await Event.findOne({ type });
+  const doesEventAlreadyExist = await Event.findOne({ title });
   if (doesEventAlreadyExist)
-    throw new ApiError(400, "Event type already in use.");
+    throw new ApiError(400, "Event title already in use.");
 
   const newEvent = await Event.create({
     title,
@@ -68,7 +70,6 @@ const createEvent = asyncHandler(async (req, res) => {
     .status(201)
     .json(new ApiResponse(200, newEvent, "Event successfully created"));
 });
-
 
 const deleteEvent=asyncHandler( async(req,res) => {
 
@@ -172,10 +173,15 @@ const getAllEvents=asyncHandler( async(req,res) => {
     new ApiResponse(200,events,"All events detail fetched successfully.")
   )
 });
+
+
+
+
 export {
   createEvent,
   deleteEvent,
   editEventDetails,
   getSingleEvent,
-  getAllEvents
+  getAllEvents,
+  // uploadEventImage
 };

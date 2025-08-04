@@ -16,18 +16,14 @@ import {
 const eventRouter = express.Router();
 
 // Public routes
-eventRouter.get("/events", getAllEvents);
-eventRouter.get("/events/:id", getSingleEvent);
+eventRouter.get("/", getAllEvents);
+eventRouter.get("/:id", getSingleEvent);
 
 // Secure event CRUD
-eventRouter.post("/events", isAuth, isAdmin, createEvent);
-eventRouter.patch("/events/:id", isAuth, isAdmin, editEventDetails);
-eventRouter.delete("/events/:id", isAuth, isAdmin, deleteEvent);
+eventRouter.post("/", createEvent);
+eventRouter.patch("/:id", editEventDetails);
+eventRouter.delete("/:id", deleteEvent);
 
-// RSVP system
-// eventRouter.post("/events/:id/register", isAuth, registerForEvent);
-// eventRouter.delete("/events/:id/register", isAuth, cancelRegistration);
-// eventRouter.get("/events/:id/registrations", isAuth, isAdmin, getEventRegistrations);
 
 // Image upload later on will be added
 // eventRouter.post("/events/:id/image", isAuth, isAdmin, uploadEventImage);

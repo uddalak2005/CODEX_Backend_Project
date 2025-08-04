@@ -18,7 +18,7 @@ const ScheduleItemSchema = new Schema({
 });
 
 
-const EventSchema = Schema(
+const EventSchema =new Schema(
   {
     title: {
       type: String,
@@ -58,7 +58,7 @@ const EventSchema = Schema(
     type: {
       type: String,
       required: true,
-      unique: true, //eg: Hackathon, Workshop
+      // unique: true, //eg: Hackathon, Workshop
     },
     color: {
       type: String,

@@ -9,6 +9,7 @@ import connectDB from "./config/db.js";
 
 import { errorMiddleware } from "./middleware/error.middleware.js";
 import userRouter from "./routes/user.routes.js";
+import registrationRouter from "./routes/registration.routes.js"
 
 const app = express();
 
@@ -22,8 +23,9 @@ app.use(
     credentials: true,
   })
 );
-app.use("/api/event", eventRouter);
-app.use("/auth", userRouter);
+app.use("/api/v1/events", eventRouter);
+app.use("/api/v1/users", userRouter);
+app.use("/api/v1/registers",registrationRouter);
 //</Middlewares>
 
 app.use(errorMiddleware);
@@ -35,5 +37,5 @@ app.get("/", (_, res) => {
 
 app.listen(PORT, async () => {
   await connectDB();
-  console.log(`server is running successfully on http://localhost:${PORT}`);
+  console.log(`Server is running successfully on http://localhost:${PORT}`);
 });
