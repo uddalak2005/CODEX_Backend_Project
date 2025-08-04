@@ -14,7 +14,7 @@ import {
 } from "../controllers/event.controllers.js";
 
 const eventRouter = express.Router();
-eventRouter.use(isAuth);
+
 // Public routes
 eventRouter.get("/", getAllEvents);
 eventRouter.get("/:id", getSingleEvent);
