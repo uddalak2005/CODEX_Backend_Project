@@ -20,9 +20,9 @@ eventRouter.get("/", getAllEvents);
 eventRouter.get("/:id", getSingleEvent);
 
 // Secure event CRUD
-eventRouter.post("/", createEvent);
-eventRouter.patch("/:id", editEventDetails);
-eventRouter.delete("/:id", deleteEvent);
+eventRouter.post("/", isAuth,createEvent);
+eventRouter.patch("/:id", isAuth, editEventDetails);
+eventRouter.delete("/:id", isAuth, deleteEvent);
 
 
 // Image upload later on will be added
