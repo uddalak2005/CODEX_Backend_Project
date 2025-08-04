@@ -13,12 +13,13 @@ const createAnnouncement=asyncHandler( async(req,res)=> {
   throw new ApiError(400, "Invalid date format.");
 }
 
-    const response=await Announcement.create({
-        title,
-        date,
-        content,
-        priority
-    })
+    const response = await Announcement.create({
+  title: title.trim(),
+  date,
+  content: content.trim(),
+  priority: priority.trim()
+});
+
 
     return res
     .status(200)
