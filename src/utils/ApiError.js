@@ -9,9 +9,10 @@ class ApiError extends Error {
 
         this.statusCode = statusCode;
         this.data = null;
-        this.errors = errors;
+        this.errors = this.errors = Array.isArray(errors) ? errors : [errors];
         this.success = false;
         this.name = "ApiError";
+        this.timestamp = new Date().toISOString();
 
         if (stack) {
             this.stack = stack;
