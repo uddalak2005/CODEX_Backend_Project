@@ -61,7 +61,7 @@ const editAnnouncement=asyncHandler( async(req,res) => {
 
     const { title,date,content,priority }=req.body
 
-    if (isNaN(Date.parse(date))) {
+    if (date && isNaN(Date.parse(date))) {
   throw new ApiError(400, "Invalid date format.");
 }
 
