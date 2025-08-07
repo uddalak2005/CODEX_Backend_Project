@@ -5,22 +5,19 @@ import jwt from 'jsonwebtoken';
 
 const verifyJWT=asyncHandler( async(req,_,next) => {
     try {
-        const token=req.header("Authorization").replace("Bearer ","") || req.cookies?.accessToken;
+        const token=req.cookies?.accessToken || req.header("Authorization").replace("Bearer ","");
         
         if(!token)
             throw new ApiError(401,"Token's missing");
     
-        const decodedToken=jwt.verify(token,process.env.ACCESS_SECRET_TOKEN);
+        const decodedToken=jwt.verify(token,process.env.ACCESS_TOKEN_SECRET);
     
         const user=await User.findById(decodedToken?._id);
     
         if(!user)
             throw new ApiError(401,"Invalid token");
     
-        req.user={
-            regNumber:decodedToken.regNumber,    // regNumber as PK
-        }
-
+        req.user=user;
         next();
     } catch (error) {
         throw new ApiError(401,error?.message || "Token not valid");

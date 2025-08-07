@@ -29,11 +29,12 @@ class UserController {
                 email,
                 password,
                 regNumber,
+                phone: req.body.phone || 1234567890,
                 branch: req.body.branch || "Not specified",
                 year: req.body.year || 1,
                 teamName: req.body.teamName || "Individual",
                 teamSize: req.body.teamSize || 1,
-                expectations: req.body.expectations || "Learning and growth"
+                expectations: req.body.expectations || "Learning and growth",
             });
 
             // Generate JWT tokens

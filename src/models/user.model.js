@@ -77,13 +77,9 @@ const UserSchema = Schema({
   role: {
     type: String,
     required: true,
-    default: "user",
+    default: "user", // Default role for new users
   },
-  createdAt: {
-    type: Date,
-    default: Date.now()
-  }
-});
+},{timestamps:true});
 
 
 // PASSWORD ENCRYPTION BEFORE SAVING

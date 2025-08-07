@@ -3,19 +3,18 @@ import "dotenv/config";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 
-import eventRouter from "./routes/event.route.js";
-import userRouter from "./routes/user.route.js";
-
-
+import eventRouter from "./routes/event.routes.js";
 import connectDB from "./config/db.js";
 
 import { errorMiddleware } from "./middleware/error.middleware.js";
+import userRouter from "./routes/user.routes.js";
 
 const app = express();
 
 //<Middlewares>
 app.use(express.json());
 app.use(cookieParser());
+app.use(express.urlencoded({extended:true}));
 app.use(
   cors({
     origin: process.env.FRONTEND_URL,
@@ -29,7 +28,7 @@ app.use("/auth", userRouter);
 app.use(errorMiddleware);
 
 const PORT = process.env.PORT;
-app.get("/", (req, res) => {
+app.get("/", (_, res) => {
   res.send("Backend is on!");
 });
 
