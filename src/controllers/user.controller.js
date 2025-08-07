@@ -8,13 +8,43 @@ import { ApiResponse } from "../utils/ApiResponse.js";
 class UserController {
 
     async signUpAsUser(req, res, next) {
-        const schema = joi.object({
-            fullName: joi.string().required().min(3),
-            email: joi.string().email().required(),
-            password: joi.string().required(),
-            regNumber: joi.string().required().alphanum(),
-            phone:joi.number().required().integer()
-        });
+
+       const schema = joi.object({
+
+        fullName: joi.string().required().min(3),
+
+        email: joi.string().email().required(),
+
+        password: joi.string().required(),
+
+        regNumber: joi.string().required().alphanum(),
+
+        phone: joi.number().required().integer(),
+
+        branch: joi.string().required(),
+
+        year: joi.number().integer().min(1).max(4).required(),
+
+        teamName: joi.string().required(),
+
+        teamSize: joi.number().min(1).max(10).required(),
+
+        expectations: joi.string().required(),
+
+        experience: joi.string().valid("Beginner", "Intermediate", "Advanced").optional(),
+
+        skills: joi.array().items(joi.string()).optional(),
+
+        dietary: joi.string().valid("Vegetarian", "Vegan", "No Restrictions", "Gluten free", "other").optional(),
+
+        tshirtSize: joi.string().valid("XS", "S", "M", "L", "XL", "XXL").optional(),
+
+        github: joi.string().uri().optional(),
+
+        linkedin: joi.string().uri().optional(),
+        
+        aggreeTerms: joi.boolean().valid(true).required()
+});
 
         const { error, value } = schema.validate(req.body);
 
@@ -38,7 +68,6 @@ class UserController {
                 teamSize: req.body.teamSize || 1,
                 expectations: req.body.expectations || "Learning and growth",
             });
-
             // Generate JWT tokens
             const { accessToken, refreshToken } = generateTokens(newUser);
 
@@ -96,7 +125,7 @@ class UserController {
             if (!user) {
                 throw new ApiError(404, "User not found");
             }
-
+  
             const isPasswordValid = await user.isPasswordCorrect(password);
 
             if (!isPasswordValid) {
@@ -105,17 +134,16 @@ class UserController {
 
             // Generate JWT tokens
             const { accessToken, refreshToken } = generateTokens(user);
-
             res.cookie('accessToken', accessToken, {
                 httpOnly: true,
-                secure: process.env.NODE_ENV === 'production',
+                secure: process.env.NODE_ENV === 'development',
                 sameSite: 'strict',
                 maxAge: 15 * 60 * 1000 // 15 minutes
             });
 
             res.cookie('refreshToken', refreshToken, {
                 httpOnly: true,
-                secure: process.env.NODE_ENV === 'production',
+                secure: process.env.NODE_ENV === 'development',
                 sameSite: 'strict',
                 maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
             });

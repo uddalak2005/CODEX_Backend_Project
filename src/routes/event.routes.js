@@ -1,6 +1,4 @@
 import express from "express";
-import { isAuth } from "../middleware/isAuth.js";
-import { isAdmin } from "../middleware/isAdmin.js";
 import {
   createEvent,
   deleteEvent,
@@ -21,7 +19,7 @@ eventRouter.get("/:id", getSingleEvent);
 
 // Secure event CRUD
 eventRouter.post("/", createEvent);
-eventRouter.patch("/:id", editEventDetails);
+eventRouter.patch("/:id",  editEventDetails);
 eventRouter.delete("/:id", deleteEvent);
 
 

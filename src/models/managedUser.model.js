@@ -1,35 +1,39 @@
+import mongoose, { Schema } from "mongoose";
 
-import mongoose,{ Schema } from "mongoose"
+const managedUserSchema = new Schema(
+  {
+    name: {
+      type: String,
+      required: true,
+    },
+    role: {
+      type: String,
+      required: true,
+    },
+    github: {
+      type: String,
+      required: true,
+    },
+    githubDP: {
+      type: String,
+      required: true,
+    },
+    linkedin: {
+      type: String,
+      required: true,
+    },
+    twitter: {
+      type: String,
+      required: true,
+    },
+    skill: {
+      type: String,
+      required: true,
+    },
+  },
+  { timestamps: true }
+);
 
-const managedUserSchema=new Schema({
-    userName:
-    {
-        type:String,
-        required:true
-    },
-    userEmail:{
-        type:String,
-        required:true
-    },
-    joiningDate:{
-        type:Date,
-        required:true
-    },
-    status:{
-        type:String,
-        required:true
-    },
-    year:{
-        type:String,
-        required:true
-    },
-    role:{
-        type:String,
-        required:true
-    }
+const managedUser = mongoose.model("managedUser", managedUserSchema);
 
-},{timestamps:true})
-
-const managedUser=mongoose.model("managedUser",managedUserSchema);
-
-export default managedUser
+export default managedUser;
