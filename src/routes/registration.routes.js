@@ -11,7 +11,7 @@ import { isAuth } from "../middleware/isAuth.js";
 
 const registrationRouter=express.Router();
 
-// registrationRouter.use(isAuth);
+registrationRouter.use(isAuth); //Comment it to disable the auth middleware
 
 //User
 registrationRouter.post("/registerUser/:id",registerForEvent);
