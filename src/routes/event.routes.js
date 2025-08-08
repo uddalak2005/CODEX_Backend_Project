@@ -1,4 +1,5 @@
 import express from "express";
+import { asyncHandler } from "../utils/asyncHandler.js";
 import {
   createEvent,
   deleteEvent,
@@ -14,13 +15,13 @@ import {
 const eventRouter = express.Router();
 
 // Public routes
-eventRouter.get("/", getAllEvents);
-eventRouter.get("/:id", getSingleEvent);
+eventRouter.get("/", asyncHandler(getAllEvents));
+eventRouter.get("/:id", asyncHandler(getSingleEvent));
 
 // Secure event CRUD
-eventRouter.post("/", createEvent);
-eventRouter.patch("/:id",  editEventDetails);
-eventRouter.delete("/:id", deleteEvent);
+eventRouter.post("/", asyncHandler(createEvent));
+eventRouter.patch("/:id", asyncHandler(editEventDetails));
+eventRouter.delete("/:id", asyncHandler(deleteEvent));
 
 
 // Image upload later on will be added

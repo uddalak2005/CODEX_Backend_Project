@@ -8,20 +8,24 @@ import {
     rsvpConfirmation
 } from "../controllers/registration.controllers.js"
 import { isAuth } from "../middleware/isAuth.js";
+import { asyncHandler } from "../utils/asyncHandler.js";
 
 const registrationRouter=express.Router();
 
-registrationRouter.use(isAuth); //Comment it to disable the auth middleware
+// Public route (no auth required)
+registrationRouter.get("/rsvp", asyncHandler(rsvpConfirmation));
+
+// Protected routes
+registrationRouter.use(isAuth);
 
 //User
-registrationRouter.post("/registerUser/:id",registerForEvent);
-registrationRouter.patch("/cancelRegistration/:id",cancelRegistration);
-registrationRouter.get("/rsvp", rsvpConfirmation)
+registrationRouter.post("/registerUser/:id", asyncHandler(registerForEvent));
+registrationRouter.patch("/cancelRegistration/:id", asyncHandler(cancelRegistration));
 
 //admin
-registrationRouter.get("/getRegistrations/:id",getEventRegistrations);
-registrationRouter.patch("/updateStatus",bulkUpdateRegistrationStatus);
-registrationRouter.delete("/deleteRegistrations",bulkDeleteRegistrations);
+registrationRouter.get("/getRegistrations/:id", asyncHandler(getEventRegistrations));
+registrationRouter.patch("/updateStatus", asyncHandler(bulkUpdateRegistrationStatus));
+registrationRouter.delete("/deleteRegistrations", asyncHandler(bulkDeleteRegistrations));
 
 
 

@@ -5,6 +5,7 @@ import Registration from "../models/registration.model.js";
 import Event from "../models/event.model.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { sendRSVPEmail } from "../services/sendRSVPEmail.service.js";
+import { sendRegistrationConfirmation } from "../services/sendNotification.service.js"
 import jwt from 'jsonwebtoken';
 
 //User reggisters for the event
@@ -66,6 +67,14 @@ const registerForEvent = asyncHandler(async (req, res) => {
     if (Object.keys(userUpdates).length > 0) {
       await User.findByIdAndUpdate(userId, { $set: userUpdates }, { new: true });
     }
+
+    try {
+      await sendRegistrationConfirmation(userExists, eventPresent);
+    } catch (err) {
+      console.error("Failed to send registration confirmation:", err);
+      throw new ApiError(400, `Unable to send Confirmation mail to: ${userExists.fullName}`);
+    }
+
 
     return res
       .status(200)
@@ -212,7 +221,7 @@ const rsvpConfirmation = asyncHandler(async (req, res) => {
   const SECRET = process.env.ACCESS_TOKEN_SECRET;
 
   const { token } = req.query;
-  let payload=null;
+  let payload = null;
   try {
     payload = jwt.verify(token, SECRET);
     console.log("Token valid:", payload);

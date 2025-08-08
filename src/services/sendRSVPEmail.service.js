@@ -1,5 +1,4 @@
 import nodemailer from "nodemailer";
-import { asyncHandler } from "../utils/asyncHandler.js";
 import jwt from "jsonwebtoken";
 
 const transporter = nodemailer.createTransport({
@@ -20,7 +19,7 @@ function generateExpiringLink(userId, baseUrl, eventId) {
 
 
 
-const sendRSVPEmail = asyncHandler(async (reciever, forEvent) => {
+const sendRSVPEmail = async (reciever, forEvent) => {
 
   const fullName = reciever.fullName;
   const title = forEvent.title;
@@ -78,6 +77,6 @@ const sendRSVPEmail = asyncHandler(async (reciever, forEvent) => {
     });
   });
 
-});
+};
 
 export { sendRSVPEmail };

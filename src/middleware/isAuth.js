@@ -13,6 +13,7 @@ const verifyJWT=asyncHandler( async(req,_,next) => {
         const decodedToken=jwt.verify(token,process.env.ACCESS_TOKEN_SECRET);
     
         const user=await User.findById(decodedToken?._id);
+        console.log(user);
     
         if(!user)
             throw new ApiError(401,"Invalid token");
