@@ -1,24 +1,43 @@
 import mongoose,{Schema} from "mongoose";
 
-const Registration = Schema(
-  {
-    eventId: Schema.Types.ObjectId,
-    ref:"User",
-    userId: Schema.Types.ObjectId,
-    ref:"User",
-
-    registrationDate: {
-      type: Date,
-    },
-    status: {
-      //"registered"/"disqualified"/"cancelled"/"eliminated"
-      type: String,
-      required: true,
-      enum:["registered","disqualified","cancelled","eliminated"]
-    },
-    description: {
-      type: String,
-    },
+const registrationSchema = new mongoose.Schema({
+  userId: { 
+    type: mongoose.Schema.Types.ObjectId, 
+    ref: "User", required: true 
   },
-  { timestamps: true }
-);
+  eventId: { 
+    type: mongoose.Schema.Types.ObjectId, 
+    ref: "Event", required: true 
+  },
+  registrationDate: { 
+    type: Date, 
+    default: Date.now 
+  },
+  status: { 
+    type: String, 
+    enum:["registered","allowed", "cancelled","disqualified","eliminated"],
+    default: "registered" 
+  },
+  description: String,
+  githubLink: String,
+  linkedInLink: String,
+  teamName: String,
+  teamSize: Number,
+  skills: [String],
+  expectations: String,
+  agreeTerms: Boolean,
+  deitary:String,
+  tshirtSize:String,
+
+  // frozen academic info
+  branch: String,
+  year: Number,
+  experience: String,
+},{timestamps:true});
+
+
+registrationSchema.index({ userId: 1, eventId: 1 }, { unique: true });
+
+const Registration= mongoose.model("Registration",registrationSchema);
+
+export default Registration;

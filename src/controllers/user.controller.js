@@ -3,6 +3,7 @@ import joi from "joi";
 import jwt from "jsonwebtoken";
 import { ApiError } from "../utils/ApiError.js";
 import { generateTokens} from "../utils/tokenUtils.js";
+import { ApiResponse } from "../utils/ApiResponse.js";
 
 class UserController {
 
@@ -11,7 +12,8 @@ class UserController {
             fullName: joi.string().required().min(3),
             email: joi.string().email().required(),
             password: joi.string().required(),
-            regNumber: joi.string().required().alphanum()
+            regNumber: joi.string().required().alphanum(),
+            phone:joi.number().required().integer()
         });
 
         const { error, value } = schema.validate(req.body);
@@ -20,7 +22,7 @@ class UserController {
             throw new ApiError(400, "Schema Mismatch", error.details);
         }
 
-        const { fullName, email, password, regNumber } = value;
+        const { fullName, email, password, regNumber, phone } = value;
 
         try {
 
@@ -29,7 +31,7 @@ class UserController {
                 email,
                 password,
                 regNumber,
-                phone: req.body.phone || 1234567890,
+                phone: phone || 1234567890,
                 branch: req.body.branch || "Not specified",
                 year: req.body.year || 1,
                 teamName: req.body.teamName || "Individual",
@@ -149,6 +151,33 @@ class UserController {
             next(error);
         }
     }
+
+    async getUserDetails(req, res, next) {
+        try {
+            const { regNumber, email } = req.body;
+
+            if (!regNumber || !email) {
+                throw new ApiError(400, "Registration number and email are required.");
+            }
+
+            const trimmedEmail = email.trim().toLowerCase();
+
+            const user = await User.findOne({ regNumber, email: trimmedEmail },"fullName regNumber email phone");
+
+            if (!user) {
+                throw new ApiError(404, "User not found. Cannot fetch details.");
+            }
+
+            return res
+            .status(200)
+            .json(
+                new ApiResponse(200, user, "User details fetched successfully.")
+            );
+        } catch (error) {
+            next(error);
+        }
+    }
+
 }
 
 export default new UserController();
