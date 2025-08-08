@@ -28,6 +28,11 @@ app.use(
   })
 );
 
+//Heathcheck for pinging on render
+
+app.get('/health', (req, res) => {
+  res.status(200).send('OK');
+});
 //</Middlewares>
 
 //Routes
