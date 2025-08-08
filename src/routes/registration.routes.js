@@ -4,7 +4,8 @@ import {
     bulkUpdateRegistrationStatus,
     cancelRegistration,
     registerForEvent,
-    getEventRegistrations
+    getEventRegistrations,
+    rsvpConfirmation
 } from "../controllers/registration.controllers.js"
 import { isAuth } from "../middleware/isAuth.js";
 
@@ -15,10 +16,13 @@ registrationRouter.use(isAuth);
 //User
 registrationRouter.post("/registerUser/:id",registerForEvent);
 registrationRouter.patch("/cancelRegistration/:id",cancelRegistration);
+registrationRouter.get("/rsvp", rsvpConfirmation)
 
 //admin
 registrationRouter.get("/getRegistrations/:id",getEventRegistrations);
 registrationRouter.patch("/updateStatus",bulkUpdateRegistrationStatus);
 registrationRouter.delete("/deleteRegistrations",bulkDeleteRegistrations);
+
+
 
 export default registrationRouter;

@@ -1,5 +1,6 @@
 //Configuration imports
 import express from "express";
+import morgan from "morgan";
 import "dotenv/config";
 import connectDB from "./config/db.js";
 import cors from "cors";
@@ -27,6 +28,15 @@ app.use(
     credentials: true,
   })
 );
+
+// Morgan middleware to log requests in 'combined' format
+app.use(morgan("[:date[iso]] :method :url :status :res[content-length] - :response-time ms"));
+//Heathcheck for pinging on render
+
+app.get("/health", (req, res) => {
+  console.log(`[${new Date().toISOString()}] Health check ping received`);
+  res.send("OK");
+});
 
 //</Middlewares>
 

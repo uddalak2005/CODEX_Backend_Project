@@ -4,6 +4,7 @@ import User from "../models/user.model.js";
 import Registration from "../models/registration.model.js";
 import Event from "../models/event.model.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
+import { sendRSVPEmail } from "../services/sendRSVPEmail.service.js";
 
 //User reggisters for the event
 const registerForEvent = asyncHandler(async (req, res) => {
@@ -175,7 +176,13 @@ const bulkUpdateRegistrationStatus = asyncHandler(async (req, res) => {
     );
 
     if (status === "allowed") {
-      const emailSent = await
+
+      const eventDetails = await Event.findById(eventId);
+      const emailSent = await sendRSVPEmail(updated, eventDetails);
+
+      if (!emailSent) {
+        throw new ApiError(400, "Unable to send RSVP mail to : ", updated.fullName);
+      }
     }
 
     if (updated) results.push(updated);
@@ -186,6 +193,39 @@ const bulkUpdateRegistrationStatus = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, results, "Statuses updated successfully."));
 });
 
+const rsvpConfirmation = asyncHandler(async (req, res) => {
+
+  const SECRET = process.env.ACCESS_TOKEN_SECRET;
+
+  const verifyMagicLink = (token) => {
+    try {
+      return jwt.verify(token, SECRET);
+    } catch (err) {
+      return null; // expired or invalid
+    }
+  }
+
+  const { token } = req.query;
+
+  const payload = verifyMagicLink(token);
+  if (!payload) {
+    return res.status(400).json(new ApiResponse(400, "Oops! Link has expired"));
+  }
+  const { uid, eventId } = payload;
+
+  const updated = await Registration.findOneAndUpdate(
+    { uid, eventId },
+    { $set: { status: "confirmed" } },
+    { new: true }
+  );
+
+  if (!updated) {
+    return res.status(404).json(new ApiError(404, "Failed to confirm your RSVP"));
+  }
+
+  return res.status(201).json(new ApiResponse(201, "RSVP Confirmed"));
+})
+
 
 
 export {
@@ -194,4 +234,5 @@ export {
   getEventRegistrations,
   bulkUpdateRegistrationStatus,
   bulkDeleteRegistrations,
+  rsvpConfirmation
 }

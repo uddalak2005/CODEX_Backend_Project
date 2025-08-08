@@ -68,9 +68,31 @@ const deleteManagedUser = asyncHandler(async (req, res) => {
         .json(new ApiResponse(200, user, "User deleted successfully."));
 });
 
+// UPDATE a managed user by ID
+const updateManagedUser = asyncHandler(async (req, res) => {
+    const { id } = req.params;
+    const { name, role, github, githubDP, linkedin, twitter, skill } = req.body;
+
+    const user = await managedUser.findByIdAndUpdate(
+        id,
+        { name, role, github, githubDP, linkedin, twitter, skill },
+        { new: true, runValidators: true }
+    );
+
+    if (!user) {
+        throw new ApiError(404, "User not found.");
+    }
+
+    return res
+        .status(200)
+        .json(new ApiResponse(200, user, "User updated successfully."));
+});
+
+
 export {
     createManagedUser,
     getAllManagedUsers,
     getManagedUserById,
-    deleteManagedUser
+    deleteManagedUser,
+    updateManagedUser
 };

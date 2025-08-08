@@ -1,0 +1,25 @@
+name: Ping Render to Keep Alive
+
+on:
+  schedule:
+    - cron: "*/5 * * * *"  # every 5 minutes UTC +5:30
+  workflow_dispatch:
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get Times
+        id: times
+        run: |
+          echo "utc_time=$(date -u +'%Y-%m-%dT%H:%M:%SZ')" >> $GITHUB_OUTPUT
+          echo "ist_time=$(TZ=Asia/Kolkata date +'%Y-%m-%dT%H:%M:%S%z')" >> $GITHUB_OUTPUT
+      
+      - name: Show Current Time
+        run: |
+          echo "UTC Time: ${{ steps.times.outputs.utc_time }}"
+          echo "IST Time: ${{ steps.times.outputs.ist_time }}"
+      
+      - name: Curl Render Backend
+        run: |
+          curl -i "https://codex-website-backend.onrender.com/health?utc=${{ steps.times.outputs.utc_time }}&ist=${{ steps.times.outputs.ist_time }}"
