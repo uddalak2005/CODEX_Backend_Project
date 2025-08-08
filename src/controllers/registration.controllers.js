@@ -5,6 +5,7 @@ import Registration from "../models/registration.model.js";
 import Event from "../models/event.model.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { sendRSVPEmail } from "../services/sendRSVPEmail.service.js";
+import jwt from 'jsonwebtoken';
 
 //User reggisters for the event
 const registerForEvent = asyncHandler(async (req, res) => {
@@ -158,6 +159,7 @@ const bulkDeleteRegistrations = asyncHandler(async (req, res) => {
 
 //admin
 const bulkUpdateRegistrationStatus = asyncHandler(async (req, res) => {
+  console.log("updating");
   const { registrations } = req.body;
 
   if (!registrations || !Array.isArray(registrations))
@@ -165,9 +167,13 @@ const bulkUpdateRegistrationStatus = asyncHandler(async (req, res) => {
 
   const results = [];
 
+  console.log(registrations);
+
   for (const entry of registrations) {
     const { userId, eventId, status } = entry;
     if (!userId || !eventId || !status) continue;
+
+    console.log("iteration")
 
     const updated = await Registration.findOneAndUpdate(
       { userId, eventId },
@@ -175,13 +181,21 @@ const bulkUpdateRegistrationStatus = asyncHandler(async (req, res) => {
       { new: true }
     );
 
+
+
+    console.log(status);
+
     if (status === "allowed") {
 
-      const eventDetails = await Event.findById(eventId);
-      const emailSent = await sendRSVPEmail(updated, eventDetails);
+      console.log("allowing");
 
-      if (!emailSent) {
-        throw new ApiError(400, "Unable to send RSVP mail to : ", updated.fullName);
+      const eventDetails = await Event.findById(eventId);
+      const user = await User.findById(userId);
+      try {
+        const emailSent = await sendRSVPEmail(user, eventDetails);
+
+      } catch (err) {
+        throw new ApiError(400, `Unable to send RSVP mail to: ${user.fullName}`);
       }
     }
 
@@ -197,27 +211,27 @@ const rsvpConfirmation = asyncHandler(async (req, res) => {
 
   const SECRET = process.env.ACCESS_TOKEN_SECRET;
 
-  const verifyMagicLink = (token) => {
-    try {
-      return jwt.verify(token, SECRET);
-    } catch (err) {
-      return null; // expired or invalid
-    }
+  const { token } = req.query;
+  let payload=null;
+  try {
+    payload = jwt.verify(token, SECRET);
+    console.log("Token valid:", payload);
+  } catch (err) {
+    console.error("JWT verification failed:", err.message);
   }
 
-  const { token } = req.query;
-
-  const payload = verifyMagicLink(token);
   if (!payload) {
     return res.status(400).json(new ApiResponse(400, "Oops! Link has expired"));
   }
   const { uid, eventId } = payload;
 
   const updated = await Registration.findOneAndUpdate(
-    { uid, eventId },
+    { userId: uid, eventId },
     { $set: { status: "confirmed" } },
     { new: true }
   );
+
+  console.log(updated);
 
   if (!updated) {
     return res.status(404).json(new ApiError(404, "Failed to confirm your RSVP"));

@@ -13,9 +13,7 @@ const transporter = nodemailer.createTransport({
 const SECRET = process.env.ACCESS_TOKEN_SECRET;
 
 function generateExpiringLink(userId, baseUrl, eventId) {
-
-  const token = jwt.sign({ uid: userId, eventId: eventId }, SECRET, { expiresIn: "72h" });;
-
+  const token = jwt.sign({ uid: userId, eventId }, SECRET, { expiresIn: "72h" });
   return `${baseUrl}?token=${token}`;
 }
 
@@ -33,7 +31,7 @@ const sendRSVPEmail = asyncHandler(async (reciever, forEvent) => {
   const eventId = forEvent._id;
   const usedId = reciever._id;
 
-  const rsvpLink = generateExpiringLink(usedId, `${process.env.BASE_URL}/rsvp`, eventId);
+  const rsvpLink = generateExpiringLink(usedId, `${process.env.BASE_URL}/api/v1/registers/rsvp`, eventId);
 
   const messageBody = `
   <div style="font-family: 'Segoe UI', sans-serif; max-width: 600px; margin: auto; padding: 20px; background-color: #f9f9f9; border-radius: 10px;">
@@ -58,7 +56,7 @@ const sendRSVPEmail = asyncHandler(async (reciever, forEvent) => {
       Stay tuned for more updates! Make sure to join our Discord/Slack and follow us on social media to get the latest info.
     </p>
     
-    <p style="font-size: 14px; color: #888; margin-top: 30px;">- The Devfolio Team</p>
+    <p style="font-size: 14px; color: #888; margin-top: 30px;">- The CODEX ITER Team</p>
   </div>
 `;
 
@@ -69,13 +67,15 @@ const sendRSVPEmail = asyncHandler(async (reciever, forEvent) => {
     html: messageBody
   };
 
-  transporter.sendMail(mailOptions, (error, info) => {
-    if (error) {
-      console.error('Error sending email:', error);
-      return false;
-    }
-    console.log('Email sent:', info.response);
-    return true
+  return new Promise((resolve, reject) => {
+    transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        console.error("Error sending email:", error);
+        return reject(new Error("Email failed")); // reject with an error
+      }
+      console.log("Email sent:", info.response);
+      resolve(true); // ✅ Always resolve with true on success
+    });
   });
 
 });

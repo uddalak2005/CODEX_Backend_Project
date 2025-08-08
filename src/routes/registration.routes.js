@@ -11,7 +11,7 @@ import { isAuth } from "../middleware/isAuth.js";
 
 const registrationRouter=express.Router();
 
-registrationRouter.use(isAuth);
+// registrationRouter.use(isAuth);
 
 //User
 registrationRouter.post("/registerUser/:id",registerForEvent);
