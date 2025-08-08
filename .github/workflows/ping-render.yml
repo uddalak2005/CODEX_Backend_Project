@@ -2,7 +2,7 @@ name: Ping Render to Keep Alive
 
 on:
   schedule:
-    - cron: "*/13 * * * *"  # every 15 minutes UTC
+    - cron: "*/5 * * * *"  # every 5 minutes UTC +5:30
   workflow_dispatch:
 
 jobs:
