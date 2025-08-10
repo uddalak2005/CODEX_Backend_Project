@@ -12,7 +12,7 @@ const projectShowcaseSchema=new Schema({
         type:[String]
     },
     githubLink:{
-        type:link
+        type:String
     },
     projectOwner:{
         type:mongoose.Types.ObjectId,
