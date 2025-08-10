@@ -175,8 +175,6 @@ const getAllEvents=asyncHandler( async(req,res) => {
 });
 
 
-
-
 export {
   createEvent,
   deleteEvent,
