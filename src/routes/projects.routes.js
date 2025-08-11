@@ -24,7 +24,7 @@ router.get('/:id', getProjectById);
 
 router.put(
     '/:id',
-    upload.fields([{ name: 'images', maxCount: 1 }]),
+    upload.fields([{ name: 'images', maxCount: 5 }]),
     updateProject
 );
 

@@ -106,37 +106,50 @@ export const getProjectById = async (req, res) => {
 
 export const updateProject = async (req, res) => {
     try {
-
         // Convert techStack from comma-separated string to array if needed
         if (typeof req.body.techStack === 'string') {
             req.body.techStack = req.body.techStack.split(',').map(s => s.trim());
         }
 
-        // Skip Joi errors caused by multipart empty fields
-        if (!req.body.images) {
-            req.body.images = [];
-        }
-
-
+        // Validate input with Joi
         const { error } = projectSchema.validate(req.body, { abortEarly: false });
         if (error) {
             return res.status(400).json({
                 success: false,
-                errors: error.details.map(err => err.message)
+                errors: error.details.map(err => err.message),
+            });
+        }
+
+        // Find current project to get existing images
+        const currentProject = await Project.findById(req.params.id);
+        if (!currentProject) {
+            return res.status(404).json({
+                success: false,
+                message: 'Project not found',
             });
         }
 
         let uploadedImageUrls = [];
-        if (req.files && req.files.image) {
+        if (req.files && req.files.images) {
             const uploadedFiles = await handleMultipleUploads(req, 'image');
-            if (uploadedFiles?.image?.length > 0) {
-                uploadedImageUrls = uploadedFiles
+            if (uploadedFiles?.length > 0) {
+                uploadedImageUrls = uploadedFiles;
             }
         }
 
+        // Prepare updateData starting from req.body
         const updateData = { ...req.body };
+
+        // Append newly uploaded images to existing images
         if (uploadedImageUrls.length > 0) {
-            updateData.images = uploadedImageUrls;
+            // Combine existing images with newly uploaded ones
+            updateData.images = [...(currentProject.images || []), ...uploadedImageUrls];
+        } else if (Array.isArray(req.body.images)) {
+            // If user explicitly sends images in req.body, override images with that
+            updateData.images = req.body.images;
+        } else {
+            // Otherwise keep existing images unchanged by removing images from updateData
+            delete updateData.images;
         }
 
         const updatedProject = await Project.findByIdAndUpdate(
@@ -145,25 +158,20 @@ export const updateProject = async (req, res) => {
             { new: true, runValidators: true }
         );
 
-        if (!updatedProject) {
-            return res.status(404).json({
-                success: false,
-                message: 'Project not found'
-            });
-        }
-
         res.status(200).json({
             success: true,
             message: 'Project updated successfully',
-            data: updatedProject
+            data: updatedProject,
         });
     } catch (err) {
         res.status(500).json({
             success: false,
-            message: err.message
+            message: err.message,
         });
     }
 };
+
+
 
 
 export const deleteProject = async (req, res) => {
