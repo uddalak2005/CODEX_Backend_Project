@@ -64,7 +64,9 @@
 | GET    | `/managedUsers`     | Get all managed users  | ✅             | ✅          |
 | DELETE | `/managedUsers/:id` | Delete managed user    | ✅             | ✅          |
 
-#### Project Showcase Routes
+---
+
+#### 🖥️ Project Showcase Routes
 | Method | Endpoint            | Description            | Auth Required | Admin Only |
 | ------ | ------------------- | ---------------------- | ------------- | ---------- |
 | POST   | `/projects/`     | Create a project    | ✅             | ✅          |
