@@ -1,11 +1,11 @@
 import express from "express";
-import { createAnnouncement, deleteAnnouncement, editAnnouncement, getAnnouncements, getSingleAnnouncement } from "../controllers/announcement.controllers.js";
-import { isAuth } from "../middleware/isAuth.js";
+import { createAnnouncement, deleteAnnouncement, editAnnouncement, getAnnouncements, getSingleAnnouncement } from "../controllers/announcement.controller.js";
+import { isAuthMiddleware } from "../middleware/isAuth.middleware.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 
 const announcementRouter=express.Router();
 
-announcementRouter.use(isAuth);
+announcementRouter.use(isAuthMiddleware);
 //admin
 announcementRouter.post("/", asyncHandler(createAnnouncement))
 announcementRouter.patch("/:id", asyncHandler(editAnnouncement))

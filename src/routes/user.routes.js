@@ -1,7 +1,7 @@
 import express from "express";
 import UserController from "../controllers/user.controller.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
-import { isAuth } from "../middleware/isAuth.js";
+import { isAuthMiddleware } from "../middleware/isAuth.middleware.js";
 
 const userRouter = express.Router();
 
@@ -12,6 +12,6 @@ userRouter.post("/signUp", asyncHandler(UserController.signUpAsUser));
 userRouter.post("/login", asyncHandler(UserController.loginUser));
 
 // User logout
-userRouter.post("/logout",isAuth, asyncHandler(UserController.logoutUser));
+userRouter.post("/logout",isAuthMiddleware, asyncHandler(UserController.logoutUser));
 
 export default userRouter;

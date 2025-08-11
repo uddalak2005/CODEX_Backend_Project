@@ -25,4 +25,4 @@ const verifyJWT=asyncHandler( async(req,_,next) => {
     }
 });
 // console.log("Here tokenised authentication will happen");
-export const isAuth=verifyJWT;
+export const isAuthMiddleware=verifyJWT;

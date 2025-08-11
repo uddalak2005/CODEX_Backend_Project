@@ -6,8 +6,8 @@ import {
     registerForEvent,
     getEventRegistrations,
     rsvpConfirmation
-} from "../controllers/registration.controllers.js"
-import { isAuth } from "../middleware/isAuth.js";
+} from "../controllers/registration.controller.js"
+import { isAuthMiddleware } from "../middleware/isAuth.middleware.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 
 const registrationRouter=express.Router();
@@ -16,7 +16,7 @@ const registrationRouter=express.Router();
 registrationRouter.get("/rsvp", asyncHandler(rsvpConfirmation));
 
 // Protected routes
-registrationRouter.use(isAuth);
+registrationRouter.use(isAuthMiddleware);
 
 //User
 registrationRouter.post("/registerUser/:id", asyncHandler(registerForEvent));

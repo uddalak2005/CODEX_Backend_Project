@@ -8,8 +8,6 @@ const transporter = nodemailer.createTransport({
   }
 })
 
-console.log("Hello Just a testing line");
-
 
 const sendRegistrationConfirmation = async (receiver, forEvent) => {
   const fullName = receiver.fullName;
