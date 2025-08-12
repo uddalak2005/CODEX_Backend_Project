@@ -48,6 +48,7 @@ const registerForEvent = asyncHandler(async (req, res) => {
       status: "registered",
     };
 
+
     registrationData.title = eventPresent.title;
     // Copy only allowed fields
     for (const key of allowedFields) {
@@ -62,7 +63,7 @@ const registerForEvent = asyncHandler(async (req, res) => {
     const userUpdates = {};
     if (branch) userUpdates.branch = branch;
     if (year) userUpdates.year = year;
-    if (level) userUpdates.experience = experience;
+    if (experience) userUpdates.experience = experience;
     if (skills) userUpdates.skills = skills;
 
     if (Object.keys(userUpdates).length > 0) {
