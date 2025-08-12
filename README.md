@@ -73,3 +73,4 @@
 | GET    | `/projects/:id` | Get a project by ID | ✅             | ✅          |
 | GET    | `/projects`     | Get all projects  | ✅             | ✅          |
 | DELETE | `/projects/:id` | Delete a project by ID   | ✅             | ✅          |
+| PUT    | `/projects/:id` | Edit project details by ID | ✅             | ✅          |         
