@@ -26,12 +26,13 @@ const registerForEvent = asyncHandler(async (req, res) => {
     const allowedFields = [
       "githubLink",
       "linkedInLink",
+      "description",
       "branch",
       "year",
       "teamName",
       "teamSize",
       "skills",
-      "level",
+      "experience",
       "expectations",
       "agreeTerms",
       "tshirtSize",
@@ -57,11 +58,11 @@ const registerForEvent = asyncHandler(async (req, res) => {
     const response = await Registration.create(registrationData);
 
     // Optional: update academic info in user profile
-    const { branch, year, level, skills } = req.body;
+    const { branch, year, experience, skills } = req.body;
     const userUpdates = {};
     if (branch) userUpdates.branch = branch;
     if (year) userUpdates.year = year;
-    if (level) userUpdates.experience = level;
+    if (level) userUpdates.experience = experience;
     if (skills) userUpdates.skills = skills;
 
     if (Object.keys(userUpdates).length > 0) {
@@ -70,6 +71,7 @@ const registerForEvent = asyncHandler(async (req, res) => {
 
     try {
       await sendRegistrationConfirmation(userExists, eventPresent);
+      console.log("reached till here");
     } catch (err) {
       console.error("Failed to send registration confirmation:", err);
       throw new ApiError(400, `Unable to send Confirmation mail to: ${userExists.fullName}`);
@@ -240,7 +242,7 @@ const rsvpConfirmation = asyncHandler(async (req, res) => {
     { new: true }
   );
 
-  console.log(updated);
+  console.log("here",updated);
 
   if (!updated) {
     return res.status(404).json(new ApiError(404, "Failed to confirm your RSVP"));
